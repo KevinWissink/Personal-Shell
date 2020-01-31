@@ -1,13 +1,28 @@
 #include "BuddyAllocator.h"
 #include <iostream>
+#include <math.h>
 using namespace std;
 
 BuddyAllocator::BuddyAllocator (int _basic_block_size, int _total_memory_length){
   basic_block_size = _basic_block_size, total_memory_size = _total_memory_length;
+
+  //make the first memory block
+  mem_start = malloc(total_memory_size);
+  BlockHeader* Block = new (mem_start) BlockHeader();
+  Block->block_size = total_memory_size;
+  Block->free = true;
+  Block->next = nullptr;
+  
+  //Initialize the vector of freelist 
+  double size =  log2(total_memory_size/basic_block_size) + 1;
+  FreeList.resize(size);
+
+  //Put the block of memory into the last spot or the vector
+  FreeList[size -1].insert(Block);
 }
 
 BuddyAllocator::~BuddyAllocator (){
-	
+	  
 }
 
 void* BuddyAllocator::alloc(int length) {
@@ -20,7 +35,7 @@ void* BuddyAllocator::alloc(int length) {
 
 void BuddyAllocator::free(void* a) {
   /* Same here! */
-  ::free (a);
+  std::free (a);
 }
 
 void BuddyAllocator::printlist (){
@@ -44,7 +59,7 @@ void BuddyAllocator::printlist (){
       b = b->next;
     }
     cout << count << endl;
-    cout << "Amount of available free memory: " << total_free_memory << " byes" << endl;  
+    cout << "Amount of available free memory: " << total_free_memory << " bytes" << endl;  
   }
 }
 

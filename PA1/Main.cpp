@@ -19,19 +19,21 @@ void easytest(BuddyAllocator* ba){
 
 int main(int argc, char ** argv) {
 
-  int basic_block_size = 128, memory_length = 512 * 1024;
+  int basic_block_size = 128, memory_length = 512;
 
   // create memory manager
   BuddyAllocator * allocator = new BuddyAllocator(basic_block_size, memory_length);
 
   // the following won't print anything until you start using FreeList and replace the "new" with your own implementation
-  easytest (allocator);
+  //easytest (allocator);
 
-  
+  allocator->printlist();
+  /*
   // stress-test the memory manager, do this only after you are done with small test cases
   Ackerman* am = new Ackerman ();
   am->test(allocator); // this is the full-fledged test. 
   
   // destroy memory manager
   delete allocator;
+  */
 }

@@ -10,6 +10,7 @@ typedef unsigned int uint;
 class BlockHeader{
 public:
 	// think about what else should be included as member variables
+	bool free;
 	int block_size;  // size of the block
 	BlockHeader* next; // pointer to the next block
 };
@@ -20,6 +21,21 @@ public:
 	BlockHeader* head;		// you need a head of the list
 public:
 	void insert (BlockHeader* b){	// adds a block to the list
+		if (head == 0 || head == NULL)
+		{
+			head = b;
+			head->next = NULL;
+		}
+		else 
+		{
+			BlockHeader* temp = head;
+			while(temp->next != NULL){
+				temp->next = temp;
+			}
+			temp->next = b;
+			b->next = NULL;
+			
+		}
 
 	}
 
@@ -35,6 +51,8 @@ private:
 	vector<LinkedList> FreeList;
 	int basic_block_size;
 	int total_memory_size;
+
+	void* mem_start;
 
 private:
 	/* private function you are required to implement
