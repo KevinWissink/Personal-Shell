@@ -1,20 +1,21 @@
 #include "BuddyAllocator.h"
 #include <iostream>
-#include <math.h>
 using namespace std;
 
 BuddyAllocator::BuddyAllocator (int _basic_block_size, int _total_memory_length){
   basic_block_size = _basic_block_size, total_memory_size = _total_memory_length;
 
   //make the first memory block
-  mem_start = malloc(total_memory_size);
-  BlockHeader* Block = new (mem_start) BlockHeader();
+  mem_start = new char(total_memory_size);
+  BlockHeader *Block = (BlockHeader *)mem_start;
+
   Block->block_size = total_memory_size;
   Block->free = true;
   Block->next = nullptr;
   
   //Initialize the vector of freelist 
   double size =  log2(total_memory_size/basic_block_size) + 1;
+  
   FreeList.resize(size);
 
   //Put the block of memory into the last spot or the vector
@@ -22,14 +23,10 @@ BuddyAllocator::BuddyAllocator (int _basic_block_size, int _total_memory_length)
 }
 
 BuddyAllocator::~BuddyAllocator (){
-	  
 }
 
 void* BuddyAllocator::alloc(int length) {
-  /* This preliminary implementation simply hands the call over the 
-     the C standard library! 
-     Of course this needs to be replaced by your implementation.
-  */
+
   return malloc (length);
 }
 

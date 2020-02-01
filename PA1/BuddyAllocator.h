@@ -2,6 +2,7 @@
 #define _BuddyAllocator_h_
 #include <iostream>
 #include <vector>
+#include <math.h>
 using namespace std;
 typedef unsigned int uint;
 
@@ -21,27 +22,70 @@ public:
 	BlockHeader* head;		// you need a head of the list
 public:
 	void insert (BlockHeader* b){	// adds a block to the list
+		BlockHeader* current = head;
+
+		//if there is nothing in the vector put it in
 		if (head == 0 || head == NULL)
 		{
 			head = b;
 			head->next = NULL;
 		}
+		//if there is something in the vector already
 		else 
 		{
-			BlockHeader* temp = head;
-			while(temp->next != NULL){
-				temp->next = temp;
+			while(current->next != NULL){
+				current = current->next;
 			}
-			temp->next = b;
+			b = current->next;
 			b->next = NULL;
 			
 		}
 
 	}
 
-	void remove (BlockHeader* b){  // removes a block from the list
+	BlockHeader* remove (BlockHeader* b){  // removes a block from the list
+		BlockHeader* current_Head = head;
 
+		if(head == b)
+		{
+			head = head->next;
+			return current_Head;
+		}
+		else 
+		{
+			BlockHeader* temp = head;
+			while(temp->next != b){
+				temp = temp->next;
+				if (temp == b)
+				{
+					return temp;
+				}
+			}
+			
+		}
+		return nullptr;
 	}
+
+	//Simple function to get the current head
+	BlockHeader* getHead()
+	{
+		return head;
+	}
+
+	//Another remove function to remove the current head when not 
+	//given a block address
+	BlockHeader* remove(){
+		BlockHeader* temp = head;
+
+		if(temp != nullptr)
+		{
+			head = head->next;
+			return temp;
+		}
+
+		return nullptr;
+	}
+
 };
 
 
@@ -52,16 +96,39 @@ private:
 	int basic_block_size;
 	int total_memory_size;
 
-	void* mem_start;
+	char* mem_start;
 
 private:
 	/* private function you are required to implement
 	 this will allow you and us to do unit test */
 	
-	BlockHeader* getbuddy (BlockHeader * addr); 
+	BlockHeader* getbuddy (BlockHeader * addr){
+		//using the formula given in the slides
+		return (BlockHeader*)((((char *)addr - mem_start) ^ addr->block_size) + mem_start);
+	}; 
 	// given a block address, this function returns the address of its buddy 
 	
-	bool arebuddies (BlockHeader* block1, BlockHeader* block2);
+	bool arebuddies (BlockHeader* block1, BlockHeader* block2)
+	{
+		//if both blocks are free and they are both the same size
+		if (block1->free && block2->free)
+		{
+			if (block1->block_size == block2->block_size)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+			
+		}
+		else
+		{
+			return false;
+		}
+		
+	};
 	// checks whether the two blocks are buddies are not
 	// note that two adjacent blocks are not buddies when they are different sizes
 
@@ -69,7 +136,17 @@ private:
 	// this function merges the two blocks returns the beginning address of the merged block
 	// note that either block1 can be to the left of block2, or the other way around
 
-	BlockHeader* split (BlockHeader* block);
+	BlockHeader* split (BlockHeader* block){
+		int new_Size = total_memory_size/2;
+
+		//make sure it is bigger than the basic block size
+		if(new_Size >= basic_block_size)
+		{
+			//remove the block from the linkedlist
+			int point = FreeList.size() - log2(total_memory_size/basic_block_size);
+			FreeList[point - 1].remove(block);
+		}
+	};
 	// splits the given block by putting a new header halfway through the block
 	// also, the original header needs to be corrected
 
@@ -111,4 +188,4 @@ public:
 	 which means that at this point, the allocator has 5 128 byte blocks, 3 512 byte blocks and so on.*/
 };
 
-#endif 
+#endif
