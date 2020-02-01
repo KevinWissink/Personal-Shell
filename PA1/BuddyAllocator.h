@@ -145,7 +145,27 @@ private:
 			//remove the block from the linkedlist
 			int point = FreeList.size() - log2(total_memory_size/basic_block_size);
 			FreeList[point - 1].remove(block);
+
+			//find the block size and make a new pointer at half point
+			int half_Block_Size = block->block_size / 2;
+			char *half_Block = (char*)block;
+			half_Block = half_Block + half_Block_Size;
+			BlockHeader *half_Block_Ptr = (BlockHeader*)half_Block_Size;
+
+			//Print the new Block Size for me
+			cout << "New Splitted Block" << block->block_size << endl << endl;
+
+			//initialize the half_Block_Ptr's header
+			half_Block_Ptr->block_size = block->block_size/2;
+			half_Block_Ptr->free = true;
+			half_Block_Ptr->next = nullptr;
+
+			//insert it into the linked list
+			FreeList[point - 2].insert(half_Block_Ptr);
+
+			return block;
 		}
+		return nullptr;
 	};
 	// splits the given block by putting a new header halfway through the block
 	// also, the original header needs to be corrected
