@@ -132,7 +132,10 @@ private:
 	// checks whether the two blocks are buddies are not
 	// note that two adjacent blocks are not buddies when they are different sizes
 
-	BlockHeader* merge (BlockHeader* block1, BlockHeader* block2);
+	BlockHeader* merge (BlockHeader* block1, BlockHeader* block2)
+	{
+		
+	};
 	// this function merges the two blocks returns the beginning address of the merged block
 	// note that either block1 can be to the left of block2, or the other way around
 
@@ -162,6 +165,11 @@ private:
 
 			//insert it into the linked list
 			FreeList[point - 2].insert(half_Block_Ptr);
+
+			//making sure block have the new values and send it to the user
+			block->block_size = block->block_size / 2;
+			block->free = false;
+			block->next = nullptr;
 
 			return block;
 		}
