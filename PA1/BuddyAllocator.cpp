@@ -28,8 +28,7 @@ BuddyAllocator::~BuddyAllocator (){
 void* BuddyAllocator::alloc(int length) {
 
   //need to make sure there is enough room for the memory and block header
-  int total_Length = length + sizeof(BlockHeader);
-  
+  int total_Length = pow(2, ceil(log2(length + sizeof(BlockHeader))));
 
   //also if the new length is too small for the basic block size set it equal to the basic block size
   if (total_Length < basic_block_size)
@@ -39,10 +38,10 @@ void* BuddyAllocator::alloc(int length) {
 
   //now i need to find which part of the vector to check in
   int point = log2(total_Length / basic_block_size);
-  
+
   //I need to start at that index and go up from there till we 
   //find the correct size to split
-  BlockHeader *address = 0;
+  BlockHeader *address = nullptr;
   int Data_Point;
   for(int i = point; i < FreeList.size(); i++)
   {
@@ -55,13 +54,14 @@ void* BuddyAllocator::alloc(int length) {
   }
   
   //Next I need to make sure we have an address
-  if (address == 0){
+  if (address == nullptr){
       return nullptr;
   }
   //otherwise i need to see if i need to split or just send the value
   else if (address->block_size > total_Length)
   {
       //need to split
+      point = log2(address->block_size / total_Length);
       for(int i = 0; i < point; i++)
       {
           address = split(address);
@@ -74,7 +74,7 @@ void* BuddyAllocator::alloc(int length) {
     address->next = nullptr;
   }
 
-  return (char*)address + sizeof(BlockHeader);
+  return (char*)address;
   
   
 

@@ -25,20 +25,15 @@ public:
 		BlockHeader* current = head;
 
 		//if there is nothing in the vector put it in
-		if (head == 0 || head == NULL)
+		if (head == 0 || head == nullptr)
 		{
 			head = b;
-			head->next = NULL;
 		}
 		//if there is something in the vector already
 		else 
 		{
-			while(current->next != NULL){
-				current = current->next;
-			}
-			b = current->next;
-			b->next = NULL;
-			
+			b->next = head;
+			head = b;
 		}
 
 	}
@@ -53,11 +48,12 @@ public:
 		}
 		else 
 		{
-			BlockHeader* temp = head;
-			while(temp->next != b){
-				temp = temp->next;
-				if (temp == b)
+			BlockHeader* temp = nullptr;
+			while(current_Head->next != nullptr){
+				if (current_Head->next == b)
 				{
+					temp = current_Head->next;
+					current_Head->next = current_Head->next->next;
 					return temp;
 				}
 			}
@@ -134,7 +130,7 @@ private:
 
 	BlockHeader* merge (BlockHeader* block1, BlockHeader* block2)
 	{
-		
+
 	};
 	// this function merges the two blocks returns the beginning address of the merged block
 	// note that either block1 can be to the left of block2, or the other way around
@@ -146,17 +142,17 @@ private:
 		if(new_Size >= basic_block_size)
 		{
 			//remove the block from the linkedlist
-			int point = FreeList.size() - log2(total_memory_size/basic_block_size);
-			FreeList[point - 1].remove(block);
+			int point = FreeList.size() - log2(total_memory_size/block->block_size)-1;
+			FreeList[point].remove(block);
 
 			//find the block size and make a new pointer at half point
 			int half_Block_Size = block->block_size / 2;
 			char *half_Block = (char*)block;
 			half_Block = half_Block + half_Block_Size;
-			BlockHeader *half_Block_Ptr = (BlockHeader*)half_Block_Size;
+			BlockHeader *half_Block_Ptr = (BlockHeader*)half_Block;
 
 			//Print the new Block Size for me
-			cout << "New Splitted Block" << block->block_size << endl << endl;
+			//cout << "New Splitted Block " << block->block_size << endl << endl;
 
 			//initialize the half_Block_Ptr's header
 			half_Block_Ptr->block_size = block->block_size/2;
@@ -164,12 +160,16 @@ private:
 			half_Block_Ptr->next = nullptr;
 
 			//insert it into the linked list
-			FreeList[point - 2].insert(half_Block_Ptr);
+			FreeList[point - 1].insert(half_Block_Ptr);
 
 			//making sure block have the new values and send it to the user
 			block->block_size = block->block_size / 2;
 			block->free = false;
 			block->next = nullptr;
+
+
+			//Print the new Block Size for me
+			cout << "Splitting New Block: " << half_Block_Ptr->block_size << endl << endl;
 
 			return block;
 		}
