@@ -130,13 +130,49 @@ private:
 
 	BlockHeader* merge (BlockHeader* block1, BlockHeader* block2)
 	{
+		int point = FreeList.size() - log2(total_memory_size/block1->block_size) - 1;
+		
 
+		if(block1 > block2)
+		{
+			//remove both blocks from the FreeeList 
+			FreeList[point].remove(block1);
+			FreeList[point].remove(block2);
+
+			//get rid of block1
+			delete block1;
+
+			//set block2 to the new values
+			block2->block_size = block2->block_size * 2;
+			block2->free = true;
+			block2->next = nullptr;
+
+			//set new block2 back to the user
+			return block2;
+		}
+		else
+		{
+			//remove both blocks from the FreeeList 
+			FreeList[point].remove(block1);
+			FreeList[point].remove(block2);
+
+			//get rid of block2
+			delete block2;
+
+			//set block1 to new values
+			block1->block_size = block1->block_size * 2;
+			block1->free = true;
+			block1->next = nullptr;
+
+			//return block1 to the user
+			return block1;
+		}		
 	};
 	// this function merges the two blocks returns the beginning address of the merged block
 	// note that either block1 can be to the left of block2, or the other way around
 
 	BlockHeader* split (BlockHeader* block){
-		int new_Size = total_memory_size/2;
+		int new_Size = block->block_size/2;
 
 		//make sure it is bigger than the basic block size
 		if(new_Size >= basic_block_size)
@@ -147,7 +183,7 @@ private:
 
 			//find the block size and make a new pointer at half point
 			int half_Block_Size = block->block_size / 2;
-			char *half_Block = (char*)block;
+			char *half_Block = (char *)block;
 			half_Block = half_Block + half_Block_Size;
 			BlockHeader *half_Block_Ptr = (BlockHeader*)half_Block;
 

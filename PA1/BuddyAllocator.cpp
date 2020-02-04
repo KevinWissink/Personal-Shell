@@ -6,7 +6,7 @@ BuddyAllocator::BuddyAllocator (int _basic_block_size, int _total_memory_length)
   basic_block_size = _basic_block_size, total_memory_size = _total_memory_length;
 
   //make the first memory block
-  mem_start = new char(total_memory_size);
+  void* mem_start = (char*) malloc(total_memory_size);
   BlockHeader *Block = (BlockHeader *)mem_start;
 
   Block->block_size = total_memory_size;
@@ -23,6 +23,16 @@ BuddyAllocator::BuddyAllocator (int _basic_block_size, int _total_memory_length)
 }
 
 BuddyAllocator::~BuddyAllocator (){
+
+  //need to go through the linked list and delete all the heads
+  for(int i = 0; i < FreeList.size(); i++)
+  {
+    while(FreeList[i].getHead() != nullptr)
+    {
+      FreeList[i].remove();
+    }
+  }
+  delete mem_start;
 }
 
 void* BuddyAllocator::alloc(int length) {
@@ -69,20 +79,18 @@ void* BuddyAllocator::alloc(int length) {
   }
   else
   {
+    //the right size is already in the list
     FreeList[Data_Point].remove(address);
     address->free = false;
     address->next = nullptr;
   }
 
-  return (char*)address;
+  return (char*)address + sizeof(BlockHeader);
   
-  
-
 }
 
 void BuddyAllocator::free(void* a) {
-  /* Same here! */
-  std::free (a);
+    
 }
 
 void BuddyAllocator::printlist (){

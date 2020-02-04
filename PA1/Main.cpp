@@ -8,7 +8,7 @@ void easytest(BuddyAllocator* ba){
   // here are a few examples
   ba->printlist();
   // allocating a byte
-  char * mem = (char *) ba->alloc (1);
+  char * mem = (char *) ba->alloc (129);
   // now print again, how should the list look now
   ba->printlist ();
 
