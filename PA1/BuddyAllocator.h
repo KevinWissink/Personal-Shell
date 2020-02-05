@@ -140,7 +140,7 @@ private:
 			FreeList[point].remove(block2);
 
 			//get rid of block1
-			delete block1;
+			//delete block1;(im dumb)
 
 			//set block2 to the new values
 			block2->block_size = block2->block_size * 2;
@@ -157,7 +157,7 @@ private:
 			FreeList[point].remove(block2);
 
 			//get rid of block2
-			delete block2;
+			//delete block2;(same here)
 
 			//set block1 to new values
 			block1->block_size = block1->block_size * 2;

@@ -92,10 +92,10 @@ void* BuddyAllocator::alloc(int length) {
 void BuddyAllocator::free(void* a) {
     
     //check if the freed block is the biggest
-    void* addr = a - sizeof(BlockHeader);
+    //void* addr = a - sizeof(BlockHeader);
 
     //make the address back to a block
-    BlockHeader *block = (BlockHeader*) addr;
+    BlockHeader *block = (BlockHeader*) (a - sizeof(BlockHeader));
 
 
     //if the block size if equal to total block length skip everything
@@ -114,10 +114,12 @@ void BuddyAllocator::free(void* a) {
       {
           //loop till it is as merged as it can be
           bool max_merge = false;
-          while(max_merge)
+          while(!max_merge)
           {
               //merge the blocks
               BlockHeader *temp = merge(block, buddy_Block);
+              point++;
+              FreeList[point].insert(temp);
 
               //check too see the temp has a buddy and its free
               buddy_Block = getbuddy(temp);
@@ -136,13 +138,16 @@ void BuddyAllocator::free(void* a) {
       }
       else
       {
-        cout << "Error Finding and Getting Buddies";
+        cout << "Error Finding and Getting Buddies" << endl;
       }
-      
-    
-    
 
     }
+    else
+    {
+      cout << "No Need for merging max size already " << endl;
+      FreeList[FreeList.size() - 1].insert(block);
+    }
+    
 }
 
 void BuddyAllocator::printlist (){
