@@ -12,7 +12,7 @@ class BlockHeader{
 public:
 	// think about what else should be included as member variables
 	bool free;
-	int block_size;  // size of the block
+	uint block_size;  // size of the block
 	BlockHeader* next; // pointer to the next block
 };
 
@@ -101,6 +101,8 @@ private:
 	BlockHeader* getbuddy (BlockHeader * addr){
 		//using the formula given in the slides
 		return (BlockHeader*)((((char *)addr - mem_start) ^ addr->block_size) + mem_start);
+
+
 	}; 
 	// given a block address, this function returns the address of its buddy 
 	

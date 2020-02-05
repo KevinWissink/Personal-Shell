@@ -6,7 +6,7 @@ BuddyAllocator::BuddyAllocator (int _basic_block_size, int _total_memory_length)
   basic_block_size = _basic_block_size, total_memory_size = _total_memory_length;
 
   //make the first memory block
-  void* mem_start = (char*) malloc(total_memory_size);
+  mem_start = (char*) malloc(total_memory_size);
   BlockHeader *Block = (BlockHeader *)mem_start;
 
   Block->block_size = total_memory_size;

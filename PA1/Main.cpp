@@ -8,7 +8,7 @@ void easytest(BuddyAllocator* ba){
   // here are a few examples
   ba->printlist();
   // allocating a byte
-  char * mem = (char *) ba->alloc (262044);
+  char * mem = (char *) ba->alloc (1);
   // now print again, how should the list look now
   ba->printlist ();
 
@@ -26,12 +26,13 @@ int main(int argc, char ** argv) {
 
   // the following won't print anything until you start using FreeList and replace the "new" with your own implementation
   easytest (allocator);
-  /*
+  
   // stress-test the memory manager, do this only after you are done with small test cases
-  Ackerman* am = new Ackerman ();
-  am->test(allocator); // this is the full-fledged test. 
+  //Ackerman* am = new Ackerman ();
+  //am->test(allocator); // this is the full-fledged test. 
   
   // destroy memory manager
+  
   delete allocator;
-  */
+  
 }
