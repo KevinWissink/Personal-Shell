@@ -207,7 +207,7 @@ private:
 
 
 			//Print the new Block Size for me
-			cout << "Splitting New Block: " << half_Block_Ptr->block_size << endl << endl;
+			//cout << "Splitting New Block: " << half_Block_Ptr->block_size << endl << endl;
 
 			return block;
 		}

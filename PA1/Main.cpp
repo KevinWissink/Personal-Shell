@@ -19,7 +19,7 @@ void easytest(BuddyAllocator* ba){
 
 int main(int argc, char ** argv) {
 
-  int basic_block_size = 128, memory_length = 512 * 1024;
+  int basic_block_size = 128, memory_length = 128 * 1048576;
 
   // create memory manager
   BuddyAllocator * allocator = new BuddyAllocator(basic_block_size, memory_length);
@@ -28,8 +28,8 @@ int main(int argc, char ** argv) {
   easytest (allocator);
   
   // stress-test the memory manager, do this only after you are done with small test cases
-  //Ackerman* am = new Ackerman ();
-  //am->test(allocator); // this is the full-fledged test. 
+  Ackerman* am = new Ackerman ();
+  am->test(allocator); // this is the full-fledged test. 
   
   // destroy memory manager
   

@@ -138,7 +138,7 @@ void BuddyAllocator::free(void* a) {
       }
       else
       {
-        cout << "Error Finding and Getting Buddies" << endl;
+        //cout << "Error Finding and Getting Buddies" << endl;
       }
 
     }
