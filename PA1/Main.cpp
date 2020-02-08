@@ -1,5 +1,6 @@
 #include "Ackerman.h"
 #include "BuddyAllocator.h"
+#include <unistd.h>
 
 void easytest(BuddyAllocator* ba){
   // be creative here
@@ -19,7 +20,37 @@ void easytest(BuddyAllocator* ba){
 
 int main(int argc, char ** argv) {
 
-  int basic_block_size = 128, memory_length = 128 * 1048576;
+  int basic_block_size = 128, memory_length = 512;
+
+  //my getopt()
+  int opt;
+  int basic_bs;
+  int total_ms;
+
+  while((opt = getopt(argc, argv, ":if:lrx")) != -1)
+  {
+      switch(opt)
+      {
+        case 'b':
+          basic_bs = stoi(optarg);
+          cout << "Input basic block length of:" << basic_bs << endl;
+          break;
+
+        case 's':
+          total_ms = stoi(optarg);
+          cout << "Input memory total length of:" << total_ms << endl;
+
+          break;
+
+        case '?':
+          cout << "Unknown option: " << optopt << endl;
+          break;
+
+        default:
+          basic_bs = basic_block_size;
+          total_ms = memory_length;
+      }
+  }
 
   // create memory manager
   BuddyAllocator * allocator = new BuddyAllocator(basic_block_size, memory_length);
