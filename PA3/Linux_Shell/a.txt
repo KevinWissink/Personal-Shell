@@ -1,0 +1,4 @@
+total 52
+-rwxrwxr-x 1 kevin kevin 45288 Mar 19 19:56 a.out
+-rw-rw-r-- 1 kevin kevin     0 Mar 19 19:09 a.txt
+-rw-rw-r-- 1 kevin kevin  3547 Mar 19 19:56 main.cpp
