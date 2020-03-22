@@ -1,0 +1,1 @@
+root         1  0.1  0.1 159840  9088 ?        Ss   20:03   0:02 /sbin/init splash
